@@ -1,3 +1,7 @@
+# fixing backspace bug
+# https://bugs.launchpad.net/ubuntu/+source/screen/+bug/29787
+bindkey -d ^@ stuff ^?
+
 # Skip startup message
 startup_message off
 
@@ -7,10 +11,26 @@ term "screen-256color"
 # Scroll
 termcapinfo xterm* ti@:te@
 
+# Change default scrollback value for new windows
+defscrollback 100000                        # default: 100
+
+# Define the time that all windows monitored for silence should
+# wait before displaying a message. Default 30 seconds.
+silencewait 15                        # default: 30
+
+shell -$SHELL
+
 # Use audible bell
 vbell off
+vbell_msg "   -- Ring, Ring!! --   "        # default: "Wuff,Wuff!!"
 
-# Status line: http://www.gnu.org/software/screen/manual/html_node/String-Escapes.html
-backtick 0 30 30 sh -c "uptime | sed -e 's/.*up/up/' | cut -d ',' -f '-2'"
-hardstatus alwayslastline
-hardstatus string "%{= gk}@%H %{= WK}%-w%{= KW}%n %t%{-}%+w %= %{= Bb} %` %{= bw} %Y-%m-%d %c:%s"
+# emulate .logout message
+pow_detach_msg "Screen session of \$LOGNAME \$:cr:\$:nl:ended."
+
+caption always "[%H] %y-%m-%d %c:%s%{=b kg}  %l  %{=r gk}%-w%{=b wb}%50>%n%f* %t%{-}%+Lw%<%{- Wk}"
+
+# tell screen that you term can scroll
+termcapinfo xterm ti@:te@
+# bind Shift+PgUp/PgDn
+bindkey -m "^[[5;2~" stuff ^b
+bindkey -m "^[[6;2~" stuff ^f
