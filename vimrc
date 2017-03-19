@@ -37,12 +37,12 @@ set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 set nowrap		" disable line wrap
-set number		" show line numbers
+"set number		" show line numbers
 set showmatch		" show matching brackets when typing
 set mouse=		" disable mouse
 set title		" set title of the window
 set laststatus=2	" always shows statusline
-set cursorline		" highlight the screen line under the cursor
+"set cursorline		" highlight the screen line under the cursor
 "set ve=all
 
 set history=1000        " remember more commands and search history
@@ -62,6 +62,10 @@ set wildmode=longest,list
 " set wildmode=longest,list:full
 " Always shows menu
 set completeopt=menuone,longest
+
+" Toggle line numbers (both normal and insert mode)
+noremap <F12> :set invnumber<CR>
+inoremap <F12> <C-O>:set invnumber<CR>
 
 " Spelling
 " cd ~/.vim/spell/; wget 'http://ftp.vim.org/pub/vim/runtime/spell/pt.utf-8.spl'
