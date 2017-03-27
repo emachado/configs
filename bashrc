@@ -120,6 +120,31 @@ export SUDO_PS1="$( echo -n "$PS1" | sed -e 's/;32m/;31m/g' )"
 unset debian_chroot_ps1 rc_ps1 login_ps1 window_ps1 pwd_ps1 git_ps1
 unset color_prompt color_prompt_when_supported
 
+# update terminal title
+if [ -z "$PROMPT_COMMAND" ]; then
+	case $TERM in
+		xterm*|vte*)
+			if [ -e /etc/sysconfig/bash-prompt-xterm ]; then
+				PROMPT_COMMAND=/etc/sysconfig/bash-prompt-xterm
+			elif [ "${VTE_VERSION:-0}" -ge 3405 ]; then
+				PROMPT_COMMAND="__vte_prompt_command"
+			else
+				PROMPT_COMMAND='printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+			fi
+			;;
+		screen*)
+			if [ -e /etc/sysconfig/bash-prompt-screen ]; then
+				PROMPT_COMMAND=/etc/sysconfig/bash-prompt-screen
+			else
+				PROMPT_COMMAND='printf "\033k%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+			fi
+			;;
+		*)
+			[ -e /etc/sysconfig/bash-prompt-default ] && PROMPT_COMMAND=/etc/sysconfig/bash-prompt-default
+			;;
+	esac
+fi
+
 # some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
